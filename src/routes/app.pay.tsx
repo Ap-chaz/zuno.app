@@ -1,19 +1,31 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 import { Shield, AlertTriangle, Lock, Phone } from "lucide-react";
 import { TopBar } from "@/components/zuno/TopBar";
 import { currency } from "@/lib/zuno-data";
+import { z } from "zod";
+
+const searchSchema = z.object({
+  amount: z.number().optional().default(0),
+  item: z.string().optional().default("Item"),
+  seller: z.string().optional().default("Seller"),
+  txId: z.string().optional().default(""),
+});
 
 export const Route = createFileRoute("/app/pay")({
   head: () => ({ meta: [{ title: "Secure Payment — ZUNO" }] }),
+  validateSearch: searchSchema,
   component: Pay,
 });
 
 function Pay() {
+  const { amount: rawAmount, item, seller, txId } = useSearch({ from: "/app/pay" });
   const [method, setMethod] = useState<"M-PESA" | "Card" | "Wallet">("M-PESA");
-  const amount = 188484;
-  const fee = 2827;
+  const amount = rawAmount || 0;
+  const fee = Math.round(amount * 0.015);
   const total = amount + fee;
+
+  const trackingId = txId || "ZUNOAXFVLO4Y8Y";
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
@@ -28,10 +40,10 @@ function Pay() {
         </div>
 
         <dl className="mt-5 space-y-3 rounded-2xl border border-border/40 bg-surface p-4 text-sm">
-          <Line label="Item" value="iPhone 17 Pro Max" />
-          <Line label="Seller" value="Gadget World ✓" />
+          <Line label="Item" value={item} />
+          <Line label="Seller" value={`${seller} ✓`} />
           <Line label="Item Amount" value={currency(amount)} />
-          <Line label="Escrow Fee" value={currency(fee)} />
+          <Line label="Escrow Fee (1.5%)" value={currency(fee)} />
           <div className="my-1 h-px bg-border/60" />
           <Line label="Total" value={currency(total)} bold />
         </dl>
@@ -63,7 +75,7 @@ function Pay() {
 
         <Link
           to="/app/tracking/$id"
-          params={{ id: "ZUNOAXFVLO4Y8Y" }}
+          params={{ id: trackingId }}
           className="my-6 flex h-14 items-center justify-center gap-2 rounded-2xl bg-gradient-gold text-base font-semibold text-gold-foreground shadow-gold"
         >
           <Lock className="h-4 w-4" /> Pay {currency(total)} into Escrow

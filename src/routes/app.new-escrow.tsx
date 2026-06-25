@@ -36,6 +36,7 @@ const initial: FormState = {
 function NewEscrow() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>(1);
+  const [sellerAccepted, setSellerAccepted] = useState(false);
   const [form, setForm] = useState<FormState>(initial);
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
@@ -96,7 +97,7 @@ function NewEscrow() {
           onNext={() => setStep(3)}
         />
       )}
-      {step === 3 && <Step3 onNext={() => setStep(4)} />}
+      {step === 3 && <Step3 accepted={sellerAccepted} onAccepted={() => setSellerAccepted(true)} onNext={() => setStep(4)} />}
       {step === 4 && (
         <Step4
           form={form}
@@ -192,12 +193,12 @@ function Step2({
 }
 
 /* ---------------- Step 3: Awaiting Seller ---------------- */
-function Step3({ onNext }: { onNext: () => void }) {
-  const [accepted, setAccepted] = useState(false);
+function Step3({ accepted, onAccepted, onNext }: { accepted: boolean; onAccepted: () => void; onNext: () => void }) {
   useEffect(() => {
-    const t = setTimeout(() => setAccepted(true), 2200);
+    if (accepted) return; // already accepted — don't restart timer on remount
+    const t = setTimeout(() => onAccepted(), 2200);
     return () => clearTimeout(t);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="px-5 pt-8">
       <div className="rounded-3xl border border-border/40 bg-surface p-6 text-center shadow-card">
@@ -393,9 +394,8 @@ function Step6({ form, amountNum, dealId }: { form: FormState; amountNum: number
     { label: "Delivered", done: false },
     { label: "Released", done: false },
   ];
-  const etaDays = parseInt(form.timeline.split(" ")[0], 10);
   const eta = new Date();
-  eta.setDate(eta.getDate() + (Number.isNaN(etaDays) ? 7 : etaDays));
+  eta.setDate(eta.getDate() + Number(form.timeline.split(" ")[0]));
   const etaStr = eta.toLocaleDateString("en-GB");
 
   return (
@@ -418,8 +418,8 @@ function Step6({ form, amountNum, dealId }: { form: FormState; amountNum: number
       <div className="mt-4 rounded-3xl border border-border/40 bg-surface p-5">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Progress</p>
         <ul className="mt-4 space-y-3">
-          {tracker.map((t) => (
-            <li key={t.label} className="flex items-center gap-3">
+          {tracker.map((t, i) => (
+            <li key={i} className="flex items-center gap-3">
               {t.done ? (
                 <CheckCircle2 className="h-5 w-5 text-gold" />
               ) : (

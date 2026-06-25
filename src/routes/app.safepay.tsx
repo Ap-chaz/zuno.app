@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield, Lock, Truck, CheckCircle2, ArrowDown } from "lucide-react";
+import zunoLogo from "@/assets/zuno-logo-new.png.asset.json";
 import { TopBar } from "@/components/zuno/TopBar";
 
 export const Route = createFileRoute("/app/safepay")({
@@ -14,9 +15,10 @@ function SafePay() {
 
       <div className="px-5 pt-4 pb-8">
         <div className="overflow-hidden rounded-3xl border border-border/40 bg-gradient-card p-6 shadow-elevated">
-          <div className="mx-auto grid h-24 w-24 place-items-center rounded-3xl bg-gradient-violet">
-            <Shield className="h-12 w-12 text-gold" strokeWidth={1.8} fill="oklch(0.82 0.16 78 / 0.2)" />
+          <div className="mx-auto grid h-24 w-24 place-items-center overflow-hidden rounded-3xl bg-white p-3 ring-1 ring-gold/30 shadow-elevated">
+            <img src={zunoLogo.url} alt="ZUNO" className="h-full w-full object-contain" />
           </div>
+
           <h1 className="mt-5 text-center text-2xl font-bold leading-tight">
             Pay only when you <span className="text-gold">trust delivery.</span>
           </h1>
@@ -43,7 +45,7 @@ function SafePay() {
         </div>
 
         <Link
-          to="/app/pay"
+          to="/app/new-escrow"
           className="mt-8 flex h-14 items-center justify-center rounded-2xl bg-gradient-gold text-base font-semibold text-gold-foreground shadow-gold"
         >
           Start a protected deal

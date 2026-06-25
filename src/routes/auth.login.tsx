@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Mail, Lock, Eye, Fingerprint } from "lucide-react";
+import { useState } from "react";
+import { Mail, Lock, Eye, EyeOff, Fingerprint } from "lucide-react";
 import { TopBar } from "@/components/zuno/TopBar";
 import { PhoneFrame } from "@/components/zuno/PhoneFrame";
 import { getRole } from "@/lib/zuno-role";
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/auth/login")({
 
 function Login() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     const role = getRole();
@@ -27,8 +29,28 @@ function Login() {
       <div className="flex flex-1 flex-col px-6 pt-6">
         <Field icon={Mail} placeholder="Phone Number or Email" />
         <div className="h-4" />
-        <Field icon={Lock} placeholder="Password" type="password" trailing={<Eye className="h-4 w-4 text-muted-foreground" />} />
-        <Link to="/auth/forgot" className="mt-3 self-end text-xs font-medium text-gold">Forgot Password?</Link>
+        <Field
+          icon={Lock}
+          placeholder="Password"
+          type={showPassword ? "text" : "password"}
+          trailing={
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="text-muted-foreground"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          }
+        />
+        <Link to="/auth/forgot" className="mt-3 self-end text-xs font-medium text-gold">
+          Forgot Password?
+        </Link>
 
         <button
           onClick={handleLogin}
@@ -49,18 +71,35 @@ function Login() {
         </button>
 
         <p className="mt-auto pb-8 pt-10 text-center text-sm text-muted-foreground">
-          Don't have an account? <Link to="/auth/signup" className="font-semibold text-gold">Sign up</Link>
+          Don't have an account?{" "}
+          <Link to="/auth/signup" className="font-semibold text-gold">
+            Sign up
+          </Link>
         </p>
       </div>
     </PhoneFrame>
   );
 }
 
-function Field({ icon: Icon, placeholder, type = "text", trailing }: { icon: typeof Mail; placeholder: string; type?: string; trailing?: React.ReactNode }) {
+function Field({
+  icon: Icon,
+  placeholder,
+  type = "text",
+  trailing,
+}: {
+  icon: typeof Mail;
+  placeholder: string;
+  type?: string;
+  trailing?: React.ReactNode;
+}) {
   return (
     <label className="flex h-14 items-center gap-3 rounded-2xl border border-border/60 bg-input px-4 transition-colors focus-within:border-gold/50">
       <Icon className="h-4 w-4 text-muted-foreground" />
-      <input type={type} placeholder={placeholder} className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+      <input
+        type={type}
+        placeholder={placeholder}
+        className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+      />
       {trailing}
     </label>
   );

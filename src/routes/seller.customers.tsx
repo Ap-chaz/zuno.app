@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { Search, Star, BadgeCheck } from "lucide-react";
 import { TopBar } from "@/components/zuno/TopBar";
 import { currency } from "@/lib/zuno-data";
@@ -17,6 +18,14 @@ const customers = [
 ];
 
 function Customers() {
+  const [query, setQuery] = useState("");
+
+  const filtered = customers.filter(
+    (c) =>
+      query === "" ||
+      c.name.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
       <TopBar title="Customers" />
@@ -24,15 +33,25 @@ function Customers() {
       <div className="px-5 pt-4">
         <label className="flex h-12 items-center gap-3 rounded-2xl border border-border/60 bg-input px-4">
           <Search className="h-4 w-4 text-muted-foreground" />
-          <input placeholder="Search customers" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search customers"
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
         </label>
       </div>
 
       <ul className="mt-4 space-y-2 px-5 pb-8">
-        {customers.map((c) => (
+        {filtered.length === 0 && (
+          <li className="py-10 text-center text-sm text-muted-foreground">No customers found</li>
+        )}
+        {filtered.map((c) => (
           <li key={c.name} className="rounded-3xl border border-border/40 bg-surface p-4">
             <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-violet font-bold">{c.initials}</div>
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-violet font-bold">
+                {c.initials}
+              </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <p className="truncate font-semibold">{c.name}</p>
@@ -40,7 +59,9 @@ function Customers() {
                 </div>
                 <div className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground">
                   <span><span className="font-semibold text-foreground">{c.orders}</span> orders</span>
-                  <span className="flex items-center gap-0.5"><Star className="h-3 w-3 fill-gold text-gold" /> {c.rating}</span>
+                  <span className="flex items-center gap-0.5">
+                    <Star className="h-3 w-3 fill-gold text-gold" /> {c.rating}
+                  </span>
                 </div>
               </div>
               <div className="shrink-0 text-right">

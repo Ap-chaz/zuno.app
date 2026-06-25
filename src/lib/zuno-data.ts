@@ -69,12 +69,19 @@ export function statusColor(s: TxStatus): string {
       return "bg-muted text-muted-foreground border-border";
     case "Disputed":
       return "bg-destructive/15 text-destructive border-destructive/30";
-    default: {
-      const _exhaustive: never = s;
-      return _exhaustive;
-    }
+    default:
+      return "";
   }
 }
+
+export const categoryEmoji: Record<string, string> = {
+  Electronics: "📱",
+  Audio: "🎧",
+  Furniture: "🛋️",
+  Drones: "🚁",
+  Wearables: "⌚",
+  Computing: "💻",
+};
 
 export const activeOrders = transactions.filter(
   (t) => t.status !== "Completed" && t.status !== "Refunded"

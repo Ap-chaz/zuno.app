@@ -20,33 +20,39 @@ function RolePicker() {
   return (
     <PhoneFrame>
       <TopBar title="Choose Account" back="/auth/signup" />
-      <div className="flex flex-1 flex-col px-6 pt-6">
-        <p className="text-xs font-bold tracking-[0.2em] text-accent">ONE MORE STEP</p>
-        <h1 className="mt-2 text-2xl font-bold leading-tight">How will you use ZUNO?</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Pick the experience that matches you. You can't switch later without contacting support.
-        </p>
+      <div
+        className="flex flex-1 flex-col justify-between px-6"
+        style={{ paddingTop: "clamp(16px, 3vh, 24px)", paddingBottom: "clamp(16px, 3vh, 24px)", gap: "clamp(16px, 3vh, 24px)" }}
+      >
+        <div style={{ gap: "clamp(12px, 2vh, 20px)" }} className="flex flex-col">
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] text-accent">ONE MORE STEP</p>
+            <h1 className="mt-2 text-2xl font-bold leading-tight">How will you use ZUNO?</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Pick the experience that matches you. You can't switch later without contacting support.
+            </p>
+          </div>
 
-        <div className="mt-6 space-y-3">
-          <RoleCard
-            icon={ShoppingBag}
-            title="I'm a Buyer"
-            sub="Send funds securely & track deliveries with escrow protection."
-            onClick={() => choose("buyer")}
-          />
-          <RoleCard
-            icon={Store}
-            title="I'm a Seller"
-            sub="Receive payments, manage orders & grow your verified business."
-            onClick={() => choose("seller")}
-          />
+          <div className="space-y-3">
+            <RoleCard
+              icon={ShoppingBag}
+              title="I'm a Buyer"
+              sub="Send funds securely & track deliveries with escrow protection."
+              onClick={() => choose("buyer")}
+            />
+            <RoleCard
+              icon={Store}
+              title="I'm a Seller"
+              sub="Receive payments, manage orders & grow your verified business."
+              onClick={() => choose("seller")}
+            />
+          </div>
         </div>
 
-        <div className="mt-auto flex items-start gap-2 rounded-2xl border border-border/40 bg-surface/60 p-3 text-xs text-muted-foreground">
+        <div className="flex items-start gap-2 rounded-2xl border border-border/40 bg-surface/60 p-3 text-xs text-muted-foreground">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
           <span>Your role is stored to your account and determines which dashboard opens after login.</span>
         </div>
-        <div className="h-6" />
       </div>
     </PhoneFrame>
   );

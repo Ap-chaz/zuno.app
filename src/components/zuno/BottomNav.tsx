@@ -24,11 +24,10 @@ export function BottomNav({ variant = "buyer" }: { variant?: "buyer" | "seller" 
     <nav className="sticky bottom-0 z-30 mt-auto border-t border-border/60 bg-surface/95 px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
       <ul className="grid grid-cols-3 gap-1">
         {items.map(({ to, label, icon: Icon, matchPrefix }) => {
-          const isRoot = to === "/app" || to === "/seller";
-          const prefix = matchPrefix ?? to;
-          const isActive = isRoot
-            ? pathname === to
-            : pathname === to || pathname.startsWith(prefix + "/");
+          const prefix = matchPrefix || to;
+          const active = pathname === to || (to !== "/app" && to !== "/seller" && pathname.startsWith(prefix));
+          const exactRoot = (to === "/app" || to === "/seller") && pathname === to;
+          const isActive = active || exactRoot;
           return (
             <li key={to}>
               <Link

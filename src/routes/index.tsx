@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Shield, ArrowRight, Lock, CheckCircle2, Users, Sparkles } from "lucide-react";
+import { ArrowRight, Lock, CheckCircle2, Users, Sparkles } from "lucide-react";
+import zunoLogo from "@/assets/zuno-logo-new.png.asset.json";
 import { Logo } from "@/components/zuno/Logo";
 import { ThemeToggle } from "@/components/zuno/ThemeToggle";
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/")({
 
 function Welcome() {
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[440px] flex-col bg-gradient-hero">
+    <div className="mx-auto flex min-h-screen w-full max-w-[440px] flex-col bg-gradient-hero sm:max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
       <div className="flex items-center justify-between px-6 pt-6">
         <Logo />
         <div className="flex items-center gap-2">
@@ -31,9 +32,11 @@ function Welcome() {
         <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
 
         <div className="relative">
-          <div className="mx-auto grid h-32 w-32 place-items-center rounded-3xl bg-gradient-violet shadow-elevated">
-            <Shield className="h-16 w-16 text-gold drop-shadow-[0_4px_20px_oklch(0.82_0.16_78/0.6)]" strokeWidth={1.8} fill="oklch(0.82 0.16 78 / 0.15)" />
+          <div className="mx-auto grid h-32 w-32 place-items-center overflow-hidden rounded-3xl bg-white p-4 shadow-elevated ring-1 ring-gold/30">
+            <img src={zunoLogo.url} alt="ZUNO" className="h-full w-full object-contain" />
           </div>
+
+
 
           <h1 className="mt-10 text-3xl font-bold leading-tight">
             Pay and get paid <span className="text-gold">safely.</span>

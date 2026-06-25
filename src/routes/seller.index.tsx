@@ -16,7 +16,7 @@ function SellerHome() {
           <Logo />
           <span className="rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-bold text-gold">SELLER</span>
         </div>
-        <Link to="/app/notifications" className="relative grid h-10 w-10 place-items-center rounded-xl bg-surface">
+        <Link to="/seller/notifications" className="relative grid h-10 w-10 place-items-center rounded-xl bg-surface">
           <Bell className="h-5 w-5 text-gold" />
         </Link>
       </header>

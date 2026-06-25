@@ -11,7 +11,16 @@ export const Route = createFileRoute("/app/sellers")({
 
 function Sellers() {
   const [cat, setCat] = useState("All");
-  const filtered = cat === "All" ? sellers : sellers.filter((s) => s.category === cat);
+  const [query, setQuery] = useState("");
+
+  const filtered = sellers
+    .filter((s) => cat === "All" || s.category === cat)
+    .filter((s) =>
+      query === "" ||
+      s.name.toLowerCase().includes(query.toLowerCase()) ||
+      s.tagline.toLowerCase().includes(query.toLowerCase()) ||
+      s.category.toLowerCase().includes(query.toLowerCase())
+    );
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
@@ -20,7 +29,12 @@ function Sellers() {
       <div className="px-5 pt-4">
         <label className="flex h-12 items-center gap-3 rounded-2xl border border-border/60 bg-input px-4">
           <Search className="h-4 w-4 text-muted-foreground" />
-          <input placeholder="Search sellers, products…" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search sellers, products…"
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
         </label>
       </div>
 
@@ -39,6 +53,9 @@ function Sellers() {
       </div>
 
       <div className="mt-4 space-y-3 px-5 pb-6">
+        {filtered.length === 0 && (
+          <p className="py-10 text-center text-sm text-muted-foreground">No sellers found</p>
+        )}
         {filtered.map((s) => (
           <article key={s.id} className="overflow-hidden rounded-3xl border border-border/40 bg-surface shadow-card">
             <div className={`h-20 bg-gradient-to-br ${s.color}`} />
@@ -64,10 +81,19 @@ function Sellers() {
 
               <div className="mt-3 flex items-center justify-between border-t border-border/40 pt-3">
                 <div className="flex gap-4 text-xs">
-                  <span><span className="font-bold text-foreground">{s.deals.toLocaleString()}</span> <span className="text-muted-foreground">deals</span></span>
-                  <span className="rounded-full bg-gold/10 px-2 py-0.5 text-[10px] font-semibold text-gold">{s.category}</span>
+                  <span>
+                    <span className="font-bold text-foreground">{s.deals.toLocaleString()}</span>{" "}
+                    <span className="text-muted-foreground">deals</span>
+                  </span>
+                  <span className="rounded-full bg-gold/10 px-2 py-0.5 text-[10px] font-semibold text-gold">
+                    {s.category}
+                  </span>
                 </div>
-                <Link to="/app/seller/$id" params={{ id: s.id }} className="flex items-center gap-1 text-xs font-semibold text-gold">
+                <Link
+                  to="/app/seller/$id"
+                  params={{ id: s.id }}
+                  className="flex items-center gap-1 text-xs font-semibold text-gold"
+                >
                   View seller <ChevronRight className="h-3 w-3" />
                 </Link>
               </div>

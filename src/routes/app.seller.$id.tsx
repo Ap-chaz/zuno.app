@@ -39,7 +39,7 @@ export const Route = createFileRoute("/app/seller/$id")({
 // TikTok isn't in lucide; use a small inline glyph.
 function TikTokIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden={true}>
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
       <path d="M19.5 8.6a6.6 6.6 0 0 1-3.9-1.3v7.4a5.3 5.3 0 1 1-5.3-5.3c.3 0 .6 0 .9.1v2.6a2.7 2.7 0 1 0 1.9 2.6V2h2.5a4 4 0 0 0 3.9 3.9V8.6z" />
     </svg>
   );
@@ -143,7 +143,7 @@ function SellerProfile() {
       </div>
 
       {/* Sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-10 mx-auto w-full max-w-[424px] border-t border-border/40 bg-background/95 px-5 py-3 backdrop-blur">
+      <div className="sticky bottom-0 z-10 border-t border-border/40 bg-background/95 px-5 py-3 backdrop-blur">
         <Link
           to="/app/new-escrow"
           className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-gradient-gold text-base font-semibold text-gold-foreground shadow-gold"

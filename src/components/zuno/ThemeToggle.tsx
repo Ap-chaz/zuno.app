@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";
@@ -11,14 +11,13 @@ function getInitial(): Theme {
 }
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // SSR-safe: getInitial() guards with typeof window check
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  useEffect(() => {
     const initial = getInitial();
-    if (typeof document !== "undefined") {
-      document.documentElement.classList.toggle("dark", initial === "dark");
-    }
-    return initial;
-  });
+    setTheme(initial);
+    document.documentElement.classList.toggle("dark", initial === "dark");
+  }, []);
 
   const toggle = () => {
     setTheme((prev) => {

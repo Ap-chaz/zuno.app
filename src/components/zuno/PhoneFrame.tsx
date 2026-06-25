@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function PhoneFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[440px] flex-col bg-background">
+    <div className="mx-auto flex w-full max-w-[440px] flex-col bg-background sm:max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl" style={{ minHeight: "100dvh" }}>
       {children}
     </div>
   );

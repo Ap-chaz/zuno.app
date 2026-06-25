@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, Shield, MessageCircle, AlertCircle } from "lucide-react";
 import { TopBar } from "@/components/zuno/TopBar";
-import { currency } from "@/lib/zuno-data";
+import { currency, transactions } from "@/lib/zuno-data";
 
 export const Route = createFileRoute("/app/tracking/$id")({
   head: ({ params }) => ({ meta: [{ title: `Order ${params.id} — ZUNO` }] }),
@@ -17,6 +17,8 @@ const steps = [
 
 function Tracking() {
   const { id } = Route.useParams();
+  const tx = transactions.find((t) => t.id === id);
+
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
       <TopBar title="Order Tracking" back="/app" />
@@ -24,15 +26,23 @@ function Tracking() {
       <div className="px-5 pt-4">
         <div className="flex items-center justify-between">
           <p className="font-mono text-base font-bold tracking-tight">#{id}</p>
-          <span className="rounded-full border border-accent/30 bg-accent/15 px-3 py-1 text-[10px] font-semibold text-accent">Funded</span>
+          <span className="rounded-full border border-accent/30 bg-accent/15 px-3 py-1 text-[10px] font-semibold text-accent">
+            Funded
+          </span>
         </div>
 
         <div className="mt-4 overflow-hidden rounded-3xl border border-accent/30 bg-gradient-violet/40 p-5 shadow-card">
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground">TOTAL PAID</p>
-          <p className="mt-2 text-4xl font-bold">{currency(191311)}</p>
+          <p className="mt-2 text-4xl font-bold">{currency(tx?.amount ?? 191311)}</p>
           <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border/40 pt-3 text-sm">
-            <div><p className="text-[10px] uppercase tracking-wider text-muted-foreground">Item</p><p className="mt-0.5 font-semibold">iPhone 17 Pro Max</p></div>
-            <div><p className="text-[10px] uppercase tracking-wider text-muted-foreground">Seller</p><p className="mt-0.5 font-semibold">Gadget World</p></div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Item</p>
+              <p className="mt-0.5 font-semibold">{tx?.item ?? "iPhone 17 Pro Max"}</p>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Seller</p>
+              <p className="mt-0.5 font-semibold">{tx?.seller ?? "Gadget World"}</p>
+            </div>
           </div>
         </div>
 
@@ -44,15 +54,27 @@ function Tracking() {
               <div className="flex flex-col items-center">
                 <div
                   className={`grid h-10 w-10 place-items-center rounded-full text-xs font-bold ${
-                    s.done ? "bg-accent text-accent-foreground" : s.active ? "border-2 border-gold bg-gold/15 text-gold" : "border-2 border-border bg-surface text-muted-foreground"
+                    s.done
+                      ? "bg-accent text-accent-foreground"
+                      : s.active
+                        ? "border-2 border-gold bg-gold/15 text-gold"
+                        : "border-2 border-border bg-surface text-muted-foreground"
                   }`}
                 >
                   {s.done ? <Check className="h-4 w-4" /> : i + 1}
                 </div>
-                {i < steps.length - 1 && <div className={`h-12 w-0.5 ${s.done ? "bg-accent" : "bg-border"}`} />}
+                {i < steps.length - 1 && (
+                  <div className={`h-12 w-0.5 ${s.done ? "bg-accent" : "bg-border"}`} />
+                )}
               </div>
               <div className="pb-6 pt-1.5">
-                <p className={`text-sm font-semibold ${s.done || s.active ? "text-foreground" : "text-muted-foreground"}`}>{s.title}</p>
+                <p
+                  className={`text-sm font-semibold ${
+                    s.done || s.active ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {s.title}
+                </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">{s.time}</p>
               </div>
             </li>
@@ -61,14 +83,22 @@ function Tracking() {
 
         <div className="mt-2 flex items-center gap-2 rounded-2xl border border-gold/30 bg-gold/5 p-3">
           <Shield className="h-4 w-4 shrink-0 text-gold" />
-          <p className="text-xs text-muted-foreground">Payment will be released once you confirm delivery.</p>
+          <p className="text-xs text-muted-foreground">
+            Payment will be released once you confirm delivery.
+          </p>
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 pb-8">
-          <button className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface text-sm font-semibold">
+          <a
+            href="tel:+254700000001"
+            className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface text-sm font-semibold"
+          >
             <MessageCircle className="h-4 w-4" /> Message seller
-          </button>
-          <Link to="/app/disputes" className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 text-sm font-semibold text-destructive">
+          </a>
+          <Link
+            to="/app/disputes"
+            className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 text-sm font-semibold text-destructive"
+          >
             <AlertCircle className="h-4 w-4" /> Report issue
           </Link>
         </div>
